@@ -10,7 +10,7 @@ The following example demonstrates how to use the sentry mixin.
     class RequestHandler(sentry.SentryMixin, web.RequestHandler):
         """Requires a ``SENTRY_DSN`` environment variable is set with the
         DSN value provided by sentry.
-    
+
         The Mixin should catch unhandled exceptions and report them to Sentry.
 
         """
