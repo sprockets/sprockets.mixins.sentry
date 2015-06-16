@@ -95,5 +95,5 @@ class SentryMixin(object):
     def _get_version(module_name):
         try:
             return pkg_resources.get_distribution(module_name).version
-         except pkg_resources.DistributionNotFound:
+        except pkg_resources.DistributionNotFound:
             return None
