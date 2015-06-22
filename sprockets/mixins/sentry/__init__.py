@@ -4,14 +4,13 @@ mixins.sentry
 A RequestHandler mixin for sending exceptions to Sentry
 
 """
-version_info = (0, 1, 0)
+version_info = (0, 2, 0)
 __version__ = '.'.join(str(v) for v in version_info)
 
 
 import math
 import os
 import pkg_resources
-import raven
 import re
 import sys
 import time
@@ -19,6 +18,9 @@ try:
     from urllib import parse
 except ImportError:
     import urlparse as parse
+
+import raven
+from tornado import web
 
 SENTRY_CLIENT = 'sentry_client'
 URI_RE = re.compile(r'^[\w\+\-]+://.*:(\w+)@.*')
@@ -43,6 +45,9 @@ class SentryMixin(object):
         return values
 
     def _handle_request_exception(self, e):
+        if isinstance(e, web.HTTPError):
+            return super(SentryMixin, self)._handle_request_exception(e)
+
         if hasattr(self.application, SENTRY_CLIENT):
             duration = math.ceil((time.time() - self.request._start_time) * 1000)
             data = {}
@@ -54,7 +59,8 @@ class SentryMixin(object):
                              'query_string': self.request.query,
                              'cookies': self.request.headers.get('Cookie', {}),
                              'headers': dict(self.request.headers)},
-                        'logger': 'sprockets.mixins.sentry'}
+                        'logger': 'sprockets.mixins.sentry',
+                        'modules': self._get_module_data()}
             kwargs = {'extra':
                           {'handler': '{0}.{1}'.format(__name__,
                                                        self.__class__.__name__),
@@ -62,22 +68,32 @@ class SentryMixin(object):
                            'http_host': self.request.host,
                            'remote_ip': self.request.remote_ip},
                       'time_spent': duration}
-            modules = {}
-            for module_name in sys.modules.keys():
-                module = sys.modules[module_name]
-                if hasattr(module, '__version__'):
-                    modules[module_name] = module.__version__
-                elif hasattr(module, 'version'):
-                    modules[module_name] = module.version
-                else:
-                    try:
-                        modules[module_name] = \
-                            pkg_resources.get_distribution(module_name).version
-                    except pkg_resources.DistributionNotFound:
-                        pass
-            data['modules'] = modules
             if self.sentry_tags:
                 kwargs.update(self.sentry_tags)
             self.application.sentry_client.captureException(True, data=data,
                                                             **kwargs)
         super(SentryMixin, self)._handle_request_exception(e)
+
+    def _get_module_data(self):
+        modules = {}
+        for module_name in sys.modules.keys():
+            module = sys.modules[module_name]
+            if hasattr(module, '__version__'):
+                modules[module_name] = module.__version__
+            elif hasattr(module, 'version'):
+                modules[module_name] = module.version
+            else:
+                try:
+                    version = self._get_version(module_name)
+                    if version:
+                        modules[module_name] = version
+                except Exception:
+                    pass
+        return modules
+
+    @staticmethod
+    def _get_version(module_name):
+        try:
+            return pkg_resources.get_distribution(module_name).version
+        except pkg_resources.DistributionNotFound:
+            return None
