@@ -2,6 +2,7 @@
 Tests for the sprockets.mixins.sentry package
 
 """
+import os
 import sys
 try:
     import unittest2 as unittest
@@ -26,8 +27,18 @@ EXPECTATIONS = {'PGSQL_DSN': 'postgres://foo:****@localhost:5432/dbname',
                 'RABBITMQ_DSN': 'amqp://sentry:****@localhost:5672/%2f',
                 'VIRTUAL_ENV': '/Users/gavinr/Environments/sprockets'}
 
+os.environ['SENTRY_DSN'] = (
+    'https://00000000000000000000000000000000:'
+    '00000000000000000000000000000000@app.getsentry.com/0')
+
 
 class TestRequestHandler(sentry.SentryMixin, web.RequestHandler):
+    send_to_sentry = mock.Mock()
+
+    def initialize(self):
+        super(TestRequestHandler, self).initialize()
+        self.sentry_client.send = self.send_to_sentry
+        self.send_to_sentry.reset_mock()
 
     def get(self, action):
         if action == 'fail':
@@ -52,53 +63,51 @@ class TestDSNPasswordMask(unittest.TestCase):
 class ApplicationTests(testing.AsyncHTTPTestCase):
 
     def get_app(self):
-        self.sentry_client = mock.Mock()
+        self.sentry_client = TestRequestHandler.send_to_sentry
         app = web.Application([web.url(r'/(\S+)', TestRequestHandler)])
-        setattr(app, sentry.SENTRY_CLIENT, self.sentry_client)
         return app
 
-    def get_call_args(self):
-        self.assertTrue(self.sentry_client.captureException.called)
-        _, args, kwargs = self.sentry_client.captureException.mock_calls[0]
-        return args, kwargs
+    def get_sentry_message(self):
+        if TestRequestHandler.send_to_sentry.called:
+            _, _, message = TestRequestHandler.send_to_sentry.mock_calls[0]
+            return message
+        return None
 
     def test_that_request_data_is_included(self):
         self.fetch('/fail')
-        args, kwargs = self.get_call_args()
-        self.assertEqual(args, (True,))
-
-        data = kwargs['data']
-        self.assertEqual(data['request']['url'], self.get_url('/fail'))
-        self.assertEqual(data['request']['method'], 'GET')
-        self.assertEqual(data['request']['data'], b'')
+        message = self.get_sentry_message()
+        self.assertEqual(message['request']['url'], self.get_url('/fail'))
+        self.assertEqual(message['request']['method'], 'GET')
+        self.assertEqual(message['request']['data'], b'')
 
     def test_that_extra_data_is_included(self):
         self.fetch('/fail')
-        _, kwargs = self.get_call_args()
-        extra = kwargs['extra']
+        message = self.get_sentry_message()
+        extra = message['extra']
         self.assertEqual(
             extra['handler'],
-            'sprockets.mixins.sentry.{0}'.format(TestRequestHandler.__name__))
-        self.assertEqual(kwargs['time_spent'], 1)
+            "'sprockets.mixins.sentry.{0}'".format(
+                TestRequestHandler.__name__))
+        self.assertEqual(message['time_spent'], 1)
 
     def test_that_tags_are_sent(self):
         self.fetch('/add-tags')
-        _, kwargs = self.get_call_args()
-        self.assertEqual(kwargs['tags']['some_tag'], 'some_value')
+        message = self.get_sentry_message()
+        self.assertEqual(message['tags']['some_tag'], 'some_value')
 
     def test_that_modules_are_sent(self):
         self.fetch('/fail')
-        _, kwargs = self.get_call_args()
-        self.assertEqual(kwargs['modules']['raven'], raven.VERSION)
-        self.assertEqual(kwargs['modules']['sprockets.mixins.sentry'],
+        message = self.get_sentry_message()
+        self.assertEqual(message['modules']['raven'], raven.VERSION)
+        self.assertEqual(message['modules']['sprockets.mixins.sentry'],
                          sentry.__version__)
-        self.assertEqual(kwargs['modules']['sys'], sys.version)
-        self.assertEqual(kwargs['modules']['tornado'], tornado.version)
+        self.assertEqual(message['modules']['sys'], sys.version)
+        self.assertEqual(message['modules']['tornado'], tornado.version)
 
     def test_that_status_codes_are_not_reported(self):
         self.fetch('/400')
-        self.assertFalse(self.sentry_client.captureException.called)
+        self.assertIsNone(self.get_sentry_message())
 
     def test_that_http_errors_are_not_reported(self):
         self.fetch('/http-error')
-        self.assertFalse(self.sentry_client.captureException.called)
+        self.assertIsNone(self.get_sentry_message())
