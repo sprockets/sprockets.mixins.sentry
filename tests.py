@@ -88,7 +88,11 @@ class ApplicationTests(testing.AsyncHTTPTestCase):
             extra['handler'],
             "'sprockets.mixins.sentry.{0}'".format(
                 TestRequestHandler.__name__))
-        self.assertEqual(message['time_spent'], 1)
+
+    def test_that_time_spent_is_nonzero(self):
+        self.fetch('/fail')
+        message = self.get_sentry_message()
+        self.assertGreater(int(message['time_spent']), 0)
 
     def test_that_tags_are_sent(self):
         self.fetch('/add-tags')
