@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import codecs
 import sys
 
@@ -29,13 +31,13 @@ if sys.version_info < (3, 0):
 
 setuptools.setup(
     name='sprockets.mixins.sentry',
-    version='0.2.0',
+    version='0.3.0',
     description='A RequestHandler mixin for sending exceptions to Sentry',
     long_description=codecs.open('README.rst', encoding='utf-8').read(),
     url='https://github.com/sprockets/sprockets.mixins.sentry.git',
     author='AWeber Communications',
     author_email='api@aweber.com',
-    license=codecs.open('LICENSE', encoding='utf-8').read(),
+    license='BSD',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
