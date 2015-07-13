@@ -10,9 +10,7 @@ __version__ = '.'.join(str(v) for v in version_info)
 
 import math
 import os
-import pkg_resources
 import re
-import sys
 import time
 try:
     from urllib import parse
@@ -35,7 +33,8 @@ class SentryMixin(object):
     def initialize(self):
         sentry_dsn = os.environ.get('SENTRY_DSN')
         if self.sentry_client is None and sentry_dsn:
-            client = raven.Client(sentry_dsn)
+            modules = ['raven', 'sys', 'tornado', __name__]
+            client = raven.Client(sentry_dsn, include_paths=modules)
             setattr(self.application, SENTRY_CLIENT, client)
         super(SentryMixin, self).initialize()
 
@@ -68,37 +67,12 @@ class SentryMixin(object):
                 'logger': 'sprockets.mixins.sentry'}
             kwargs['extra']['http_host'] = self.request.host
             kwargs['extra']['remote_ip'] = self.request.remote_ip
-        kwargs['modules'] = self._get_module_data()
 
         if self.sentry_tags:
             kwargs.update({'tags': self.sentry_tags})
         self.sentry_client.captureException(True, **kwargs)
 
         super(SentryMixin, self)._handle_request_exception(e)
-
-    def _get_module_data(self):
-        modules = {}
-        for module_name in sys.modules.keys():
-            module = sys.modules[module_name]
-            if hasattr(module, '__version__'):
-                modules[module_name] = module.__version__
-            elif hasattr(module, 'version'):
-                modules[module_name] = module.version
-            else:
-                try:
-                    version = self._get_version(module_name)
-                    if version:
-                        modules[module_name] = version
-                except Exception:
-                    pass
-        return modules
-
-    @staticmethod
-    def _get_version(module_name):
-        try:
-            return pkg_resources.get_distribution(module_name).version
-        except pkg_resources.DistributionNotFound:
-            return None
 
     @property
     def sentry_client(self):
