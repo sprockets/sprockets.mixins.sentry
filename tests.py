@@ -2,6 +2,7 @@
 Tests for the sprockets.mixins.sentry package
 
 """
+import sys
 try:
     import unittest2 as unittest
 except ImportError:
@@ -13,6 +14,8 @@ except ImportError:
     import mock
 
 from tornado import testing, web
+import raven
+import tornado
 
 from sprockets.mixins import sentry
 
@@ -82,6 +85,15 @@ class ApplicationTests(testing.AsyncHTTPTestCase):
         self.fetch('/add-tags')
         _, kwargs = self.get_call_args()
         self.assertEqual(kwargs['tags']['some_tag'], 'some_value')
+
+    def test_that_modules_are_sent(self):
+        self.fetch('/fail')
+        _, kwargs = self.get_call_args()
+        self.assertEqual(kwargs['modules']['raven'], raven.VERSION)
+        self.assertEqual(kwargs['modules']['sprockets.mixins.sentry'],
+                         sentry.__version__)
+        self.assertEqual(kwargs['modules']['sys'], sys.version)
+        self.assertEqual(kwargs['modules']['tornado'], tornado.version)
 
     def test_that_status_codes_are_not_reported(self):
         self.fetch('/400')

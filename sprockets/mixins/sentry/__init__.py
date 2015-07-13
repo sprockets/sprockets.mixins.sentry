@@ -63,10 +63,10 @@ class SentryMixin(object):
                     'query_string': self.request.query,
                     'cookies': self.request.headers.get('Cookie', {}),
                     'headers': dict(self.request.headers)},
-                'logger': 'sprockets.mixins.sentry',
-                'modules': self._get_module_data()}
+                'logger': 'sprockets.mixins.sentry'}
             kwargs['extra']['http_host'] = self.request.host
             kwargs['extra']['remote_ip'] = self.request.remote_ip
+        kwargs['modules'] = self._get_module_data()
 
         if self.sentry_tags:
             kwargs.update({'tags': self.sentry_tags})
