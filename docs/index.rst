@@ -10,26 +10,37 @@ Installation
 `Python Package Index <https://pypi.python.org/pypi/sprockets.mixins.sentry>`_
 and can be installed via ``pip`` or ``easy_install``:
 
-.. code:: bash
+.. code-block:: bash
 
-  pip install sprockets.mixins.sentry
+   pip install sprockets.mixins.sentry
 
 Requirements
 ------------
-@TODO: Put full requirements list here, should match requirements.txt
--  `sprockets <https://github.com/sprockets/sprockets>`_
+- `raven`_
+- `tornado`_
 
 API Documentation
 -----------------
-.. toctree::
-   :maxdepth: 2
+.. automodule:: sprockets.mixins.sentry
+   :members:
 
-   api
-   examples
+Examples
+--------
+The following application will report errors to sentry if you export the
+:envvar:`SENTRY_DSN` environment variable and make a request to
+http://localhost:8000/whatever provided that *whatever* is not an integer.
+
+.. literalinclude:: example.py
 
 Version History
 ---------------
-See :doc:`history`
+* `0.2.0`_ (22-Jun-2015)
+
+  - Stop reporting :class:`tornado.web.HTTPError`s
+
+* `0.1.0`_ (13-May-2015)
+
+  - Initial public release
 
 Issues
 ------
@@ -43,12 +54,10 @@ License
 -------
 ``sprockets.mixins.sentry`` is released under the `3-Clause BSD license <https://github.com/sprockets/sprockets.mixins.sentry/blob/master/LICENSE>`_.
 
-Indices and tables
-------------------
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. _raven: https://raven.readthedocs.org/
+.. _tornado: https://tornadoweb.org/
+.. _0.1.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/e01c264...0.1.0
+.. _0.2.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.1.0...0.2.0
 
 .. |Version| image:: https://badge.fury.io/py/sprockets.mixins.sentry.svg?
    :target: http://badge.fury.io/py/sprockets.mixins.sentry
@@ -64,3 +73,4 @@ Indices and tables
 
 .. |License| image:: https://pypip.in/license/sprockets.mixins.sentry/badge.svg?
    :target: https://sprocketsmixinssentry.readthedocs.org
+

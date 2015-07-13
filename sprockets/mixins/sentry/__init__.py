@@ -25,6 +25,38 @@ URI_RE = re.compile(r'^[\w\+\-]+://.*:(\w+)@.*')
 
 
 class SentryMixin(object):
+    """
+    Report unexpected exceptions to Sentry.
+
+    Mix this in over a :class:`tornado.web.RequestHandler` to report
+    unhandled exceptions to Sentry so that you can figure out what
+    went wrong.  In order to use this mix-in, all that you have to do
+    is define the **SENTRY_DSN** environment variable that contains your
+    projects Sentry DSN.  Whenever a request comes it and the environment
+    variable is set, this mix-in will create a new :class:`raven.base.Client`
+    instance and make it available via the :attr:`sentry_client` property.
+
+    If an exception is caught by :meth:`._handle_request_exception`, then
+    it will be reported to Sentry in all it's glory.
+
+    .. attribute:: sentry_client
+
+       The :class:`raven.base.Client` instance or :data:`None` if sentry
+       reporting is disabled.  You can modify attributes of the client
+       as required for your application -- for example, you can add new
+       modules by adding to ``self.sentry_client.include_paths``.
+
+    .. attribute:: sentry_extra
+
+       A :class:`dict` of extra information to pass to sentry when an
+       exception is reported.
+
+    .. attribute:: sentry_tags
+
+       A :class:`dict` of tag and value pairs to associated with any
+       reported exceptions.
+
+    """
 
     def __init__(self, *args, **kwargs):
         self.sentry_extra = {}
