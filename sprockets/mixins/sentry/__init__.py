@@ -28,13 +28,15 @@ URI_RE = re.compile(r'^[\w\+\-]+://.*:(\w+)@.*')
 
 class SentryMixin(object):
 
-    def initialize(self):
+    def __init__(self, *args, **kwargs):
         self.sentry_tags = {}
-        if self.sentry_client is None:
-            sentry_dsn = os.environ.get('SENTRY_DSN')
-            if sentry_dsn:
-                setattr(self.application, SENTRY_CLIENT,
-                        raven.Client(sentry_dsn))
+        super(SentryMixin, self).__init__(*args, **kwargs)
+
+    def initialize(self):
+        sentry_dsn = os.environ.get('SENTRY_DSN')
+        if self.sentry_client is None and sentry_dsn:
+            client = raven.Client(sentry_dsn)
+            setattr(self.application, SENTRY_CLIENT, client)
         super(SentryMixin, self).initialize()
 
     def _strip_uri_passwords(self, values):
