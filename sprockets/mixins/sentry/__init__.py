@@ -27,6 +27,7 @@ URI_RE = re.compile(r'^[\w\+\-]+://.*:(\w+)@.*')
 class SentryMixin(object):
 
     def __init__(self, *args, **kwargs):
+        self.sentry_extra = {}
         self.sentry_tags = {}
         super(SentryMixin, self).__init__(*args, **kwargs)
 
@@ -50,11 +51,11 @@ class SentryMixin(object):
             return super(SentryMixin, self)._handle_request_exception(e)
 
         duration = math.ceil((time.time() - self.request._start_time) * 1000)
-        kwargs = {
-            'extra': {
-                'handler': '{0}.{1}'.format(__name__, self.__class__.__name__),
-                'env': self._strip_uri_passwords(dict(os.environ))},
-            'time_spent': duration}
+        kwargs = {'extra': self.sentry_extra, 'time_spent': duration}
+        kwargs['extra'].setdefault(
+            'handler', '{0}.{1}'.format(__name__, self.__class__.__name__))
+        kwargs['extra'].setdefault('env',
+                                   self._strip_uri_passwords(dict(os.environ)))
         if hasattr(self, 'request'):
             kwargs['data'] = {
                 'request': {
