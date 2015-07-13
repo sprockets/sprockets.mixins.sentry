@@ -34,6 +34,13 @@ http://localhost:8000/whatever provided that *whatever* is not an integer.
 
 Version History
 ---------------
+* `0.3.0`_ (13-Jul-2015)
+
+  - Add ``sprockets.mixins.sentry.SentryMixin.sentry_extra``
+  - Add ``sprockets.mixins.sentry.SentryMixin.sentry_tags``
+  - Improve module reporting in Sentry messages
+  - Improved documentation
+
 * `0.2.0`_ (22-Jun-2015)
 
   - Stop reporting :class:`tornado.web.HTTPError`s
@@ -56,8 +63,10 @@ License
 
 .. _raven: https://raven.readthedocs.org/
 .. _tornado: https://tornadoweb.org/
+
 .. _0.1.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/e01c264...0.1.0
 .. _0.2.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.1.0...0.2.0
+.. _0.3.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.2.0...0.3.0
 
 .. |Version| image:: https://badge.fury.io/py/sprockets.mixins.sentry.svg?
    :target: http://badge.fury.io/py/sprockets.mixins.sentry
