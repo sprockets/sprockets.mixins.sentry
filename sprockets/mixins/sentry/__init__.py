@@ -69,7 +69,7 @@ class SentryMixin(object):
                            'remote_ip': self.request.remote_ip},
                       'time_spent': duration}
             if self.sentry_tags:
-                kwargs.update(self.sentry_tags)
+                kwargs.update({'tags': self.sentry_tags})
             self.application.sentry_client.captureException(True, data=data,
                                                             **kwargs)
         super(SentryMixin, self)._handle_request_exception(e)

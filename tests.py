@@ -31,6 +31,9 @@ class TestRequestHandler(sentry.SentryMixin, web.RequestHandler):
             raise RuntimeError('something unexpected')
         if action == 'http-error':
             raise web.HTTPError(500)
+        if action == 'add-tags':
+            self.sentry_tags['some_tag'] = 'some_value'
+            raise RuntimeError
         self.set_status(int(action))
         self.finish()
 
@@ -74,6 +77,11 @@ class ApplicationTests(testing.AsyncHTTPTestCase):
             extra['handler'],
             'sprockets.mixins.sentry.{0}'.format(TestRequestHandler.__name__))
         self.assertEqual(kwargs['time_spent'], 1)
+
+    def test_that_tags_are_sent(self):
+        self.fetch('/add-tags')
+        _, kwargs = self.get_call_args()
+        self.assertEqual(kwargs['tags']['some_tag'], 'some_value')
 
     def test_that_status_codes_are_not_reported(self):
         self.fetch('/400')
