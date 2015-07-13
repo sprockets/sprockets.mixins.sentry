@@ -37,7 +37,7 @@ setuptools.setup(
     url='https://github.com/sprockets/sprockets.mixins.sentry.git',
     author='AWeber Communications',
     author_email='api@aweber.com',
-    license=codecs.open('LICENSE', encoding='utf-8').read(),
+    license='BSD',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
