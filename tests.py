@@ -45,6 +45,8 @@ class TestRequestHandler(sentry.SentryMixin, web.RequestHandler):
             raise RuntimeError('something unexpected')
         if action == 'http-error':
             raise web.HTTPError(500)
+        if action == 'web-finish':
+            raise web.Finish()
         if action == 'add-tags':
             self.sentry_tags['some_tag'] = 'some_value'
             raise RuntimeError
@@ -114,4 +116,8 @@ class ApplicationTests(testing.AsyncHTTPTestCase):
 
     def test_that_http_errors_are_not_reported(self):
         self.fetch('/http-error')
+        self.assertIsNone(self.get_sentry_message())
+
+    def test_that_web_finish_is_not_reported(self):
+        self.fetch('/web-finish')
         self.assertIsNone(self.get_sentry_message())
