@@ -4,7 +4,7 @@ mixins.sentry
 A RequestHandler mixin for sending exceptions to Sentry
 
 """
-version_info = (0, 3, 0)
+version_info = (0, 4, 0)
 __version__ = '.'.join(str(v) for v in version_info)
 
 

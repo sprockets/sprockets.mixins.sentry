@@ -34,6 +34,10 @@ http://localhost:8000/whatever provided that *whatever* is not an integer.
 
 Version History
 ---------------
+* `0.4.0`_ (16-Dec-2015)
+
+  - Ignore web.Finish exceptions
+
 * `0.3.0`_ (13-Jul-2015)
 
   - Add ``sprockets.mixins.sentry.SentryMixin.sentry_extra``
@@ -67,6 +71,7 @@ License
 .. _0.1.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/e01c264...0.1.0
 .. _0.2.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.1.0...0.2.0
 .. _0.3.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.2.0...0.3.0
+.. _0.4.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.3.0...0.4.0
 
 .. |Version| image:: https://badge.fury.io/py/sprockets.mixins.sentry.svg?
    :target: http://badge.fury.io/py/sprockets.mixins.sentry
