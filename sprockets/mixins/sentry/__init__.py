@@ -4,7 +4,7 @@ mixins.sentry
 A RequestHandler mixin for sending exceptions to Sentry
 
 """
-version_info = (0, 3, 0)
+version_info = (0, 4, 0)
 __version__ = '.'.join(str(v) for v in version_info)
 
 
@@ -79,7 +79,9 @@ class SentryMixin(object):
         return values
 
     def _handle_request_exception(self, e):
-        if isinstance(e, web.HTTPError) or self.sentry_client is None:
+        if (isinstance(e, web.HTTPError)
+                or isinstance(e, web.Finish)
+                or self.sentry_client is None):
             return super(SentryMixin, self)._handle_request_exception(e)
 
         duration = math.ceil((time.time() - self.request._start_time) * 1000)

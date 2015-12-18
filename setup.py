@@ -31,7 +31,7 @@ if sys.version_info < (3, 0):
 
 setuptools.setup(
     name='sprockets.mixins.sentry',
-    version='0.3.0',
+    version='0.4.0',
     description='A RequestHandler mixin for sending exceptions to Sentry',
     long_description=codecs.open('README.rst', encoding='utf-8').read(),
     url='https://github.com/sprockets/sprockets.mixins.sentry.git',
@@ -51,6 +51,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Libraries',
