@@ -13,7 +13,7 @@ templates_path = []
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'sprockets.mixins.sentry'
-copyright = '2015, AWeber Communications'
+copyright = '2016, AWeber Communications'
 version = '.'.join(__version__.split('.')[0:1])
 release = __version__
 if len(version_info) > 3:

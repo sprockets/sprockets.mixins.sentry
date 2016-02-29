@@ -31,7 +31,7 @@ if sys.version_info < (3, 0):
 
 setuptools.setup(
     name='sprockets.mixins.sentry',
-    version='0.4.0',
+    version='1.0.0',
     description='A RequestHandler mixin for sending exceptions to Sentry',
     long_description=codecs.open('README.rst', encoding='utf-8').read(),
     url='https://github.com/sprockets/sprockets.mixins.sentry.git',
@@ -39,7 +39,7 @@ setuptools.setup(
     author_email='api@aweber.com',
     license='BSD',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',

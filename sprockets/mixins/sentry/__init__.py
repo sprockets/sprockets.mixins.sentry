@@ -4,7 +4,7 @@ mixins.sentry
 A RequestHandler mixin for sending exceptions to Sentry
 
 """
-version_info = (0, 4, 0)
+version_info = (1, 0, 0)
 __version__ = '.'.join(str(v) for v in version_info)
 
 
@@ -105,7 +105,7 @@ class SentryMixin(object):
 
         if self.sentry_tags:
             kwargs.update({'tags': self.sentry_tags})
-        self.sentry_client.captureException(True, **kwargs)
+        self.sentry_client.captureException(**kwargs)
 
         super(SentryMixin, self)._handle_request_exception(e)
 
