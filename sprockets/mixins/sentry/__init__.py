@@ -105,7 +105,7 @@ class SentryMixin(object):
 
         if self.sentry_tags:
             kwargs.update({'tags': self.sentry_tags})
-        self.sentry_client.captureException(True, **kwargs)
+        self.sentry_client.captureException(**kwargs)
 
         super(SentryMixin, self)._handle_request_exception(e)
 
