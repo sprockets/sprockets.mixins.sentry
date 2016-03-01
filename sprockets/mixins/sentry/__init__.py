@@ -127,6 +127,25 @@ def install(application, **kwargs):
     :returns: :data:`True` if the client was installed by this call
         and :data:`False` otherwise.
 
+    This function should be called to initialize the Sentry client
+    for your application.  It will be called automatically with the
+    default parameters by :class:`.SentryMixin` if you do not call
+    it during the creation of your application.  You should install
+    the client explicitly so that you can set at least the following
+    properties:
+
+    - **include_paths** list of python modules to include in tracebacks.
+      This function ensures that ``raven``, ``sprockets``, ``sys``, and
+      ``tornado`` are included but you probably want to include additional
+      packages.
+
+    - **release** the version of the application that is running
+
+    See `the raven documentation`_ for additional information.
+
+    .. _the raven documentation: https://docs.getsentry.com/hosted/clients/
+       python/advanced/#client-arguments
+
     """
     if get_client(application) is not None:
         LOGGER.warning('sentry client is already installed')
@@ -141,9 +160,19 @@ def install(application, **kwargs):
         setattr(application, 'sentry_client', None)
         return False
 
+    # ``include_paths`` has two purposes:
+    # 1. it tells sentry which parts of the stack trace are considered
+    #    part of the application for use in the UI
+    # 2. it controls which modules are included in the version dump
     include_paths = set(kwargs.pop('include_paths', []))
     include_paths.update(['raven', 'sprockets', 'sys', 'tornado', __name__])
     kwargs['include_paths'] = list(include_paths)
+
+    # ``exclude_paths`` tells the sentry UI which modules to exclude
+    # from the "In App" view of the traceback.
+    exclude_paths = set(kwargs.pop('exclude_paths', []))
+    exclude_paths.update(['raven', 'sys', 'tornado'])
+    kwargs['exclude_paths'] = list(exclude_paths)
 
     client = raven.Client(sentry_dsn, **kwargs)
     setattr(application, 'sentry_client', client)

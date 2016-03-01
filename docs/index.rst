@@ -37,6 +37,8 @@ Version History
 * `Next Release`_
 
   - Move raven client initialization into ``sprockets.mixins.sentry.install``
+  - Add support for setting raven.Client options when calling ``install`` on
+    the application.
 
 * `1.0.0`_
 

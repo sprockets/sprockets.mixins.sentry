@@ -4,6 +4,7 @@ Tests for the sprockets.mixins.sentry package
 """
 import os
 import sys
+import uuid
 try:
     import unittest2 as unittest
 except ImportError:
@@ -121,3 +122,60 @@ class ApplicationTests(testing.AsyncHTTPTestCase):
     def test_that_web_finish_is_not_reported(self):
         self.fetch('/web-finish')
         self.assertIsNone(self.get_sentry_message())
+
+    def test_that_tornado_frames_are_captured(self):
+        self.fetch('/fail')
+        message = self.get_sentry_message()
+        exception = message['exception']['values'][0]
+        for frame in exception['stacktrace']['frames']:
+            if frame['filename'].startswith('tornado'):
+                break
+        else:
+            self.fail('tornado frames not captured in %r' % exception)
+
+    def test_that_tornado_is_not_in_app(self):
+        self.fetch('/fail')
+        message = self.get_sentry_message()
+        exception = message['exception']['values'][0]
+        for frame in exception['stacktrace']['frames']:
+            if frame['filename'].startswith('tornado'):
+                self.assertEqual(frame['in_app'], False)
+
+
+class InstallationTests(unittest.TestCase):
+
+    # cannot use mock since it answers True to getattr calls
+    class Application(object): pass
+
+    def test_that_client_is_installed(self):
+        application = self.Application()
+        sentry.install(application)
+        self.assertIsInstance(application.sentry_client, raven.Client)
+
+    def test_that_client_is_not_installed_unless_dsn_exists(self):
+        saved = os.environ.pop('SENTRY_DSN', None)
+        try:
+            application = self.Application()
+            sentry.install(application)
+            self.assertIsNone(application.sentry_client)
+        finally:
+            if saved:
+                os.environ['SENTRY_DSN'] = saved
+
+    def test_that_custom_include_paths_are_used(self):
+        application = self.Application()
+        sentry.install(application, include_paths=['foo'])
+        self.assertIn('foo', application.sentry_client.include_paths)
+        # the following are hard-coded
+        self.assertIn('raven', application.sentry_client.include_paths)
+        self.assertIn('sprockets', application.sentry_client.include_paths)
+        self.assertIn('sys', application.sentry_client.include_paths)
+
+    def test_that_custom_exclude_paths_are_used(self):
+        application = self.Application()
+        sentry.install(application, exclude_paths=['foo'])
+        self.assertIn('foo', application.sentry_client.exclude_paths)
+        # the following are hard-coded
+        self.assertIn('raven', application.sentry_client.exclude_paths)
+        self.assertIn('sys', application.sentry_client.exclude_paths)
+        self.assertIn('tornado', application.sentry_client.exclude_paths)

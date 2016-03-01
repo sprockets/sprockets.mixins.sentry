@@ -17,18 +17,24 @@ class Handler(sentry.SentryMixin, web.RequestHandler):
         self.set_status(int(status_code))
 
 
+def make_application(app_tags):
+    application = web.Application([web.url(r'/(\S+)', Handler)])
+    sentry.install(application, include_paths=[__name__], tags=app_tags)
+    return application
+
+
 def stop(signo, frame):
     iol = ioloop.IOLoop.current()
     iol.add_callback_from_signal(iol.stop)
 
 
 if __name__ == '__main__':
-    tags = {}
+    app_tags = {}
     for arg in sys.argv[1:]:
         name, _, value = arg.partition('=')
-        tags[name] = value
+        app_tags[name] = value
 
     signal.signal(signal.SIGINT, stop)
-    app = web.Application([web.url(r'/(\S+)', Handler, {'tags': tags})])
+    app = make_application(app_tags)
     app.listen(8000)
     ioloop.IOLoop.current().start()
