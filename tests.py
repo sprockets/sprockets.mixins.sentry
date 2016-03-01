@@ -179,3 +179,15 @@ class InstallationTests(unittest.TestCase):
         self.assertIn('raven', application.sentry_client.exclude_paths)
         self.assertIn('sys', application.sentry_client.exclude_paths)
         self.assertIn('tornado', application.sentry_client.exclude_paths)
+
+    def test_that_environment_is_set_by_default(self):
+        saved = os.environ.pop('ENVIRONMENT', None)
+        try:
+            env = str(uuid.uuid4())
+            os.environ['ENVIRONMENT'] = env
+            application = self.Application()
+            sentry.install(application)
+            self.assertEqual(application.sentry_client.environment, env)
+        finally:
+            if saved:
+                os.environ['ENVIRONMENT'] = saved

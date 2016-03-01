@@ -174,6 +174,9 @@ def install(application, **kwargs):
     exclude_paths.update(['raven', 'sys', 'tornado'])
     kwargs['exclude_paths'] = list(exclude_paths)
 
+    if os.environ.get('ENVIRONMENT'):
+        kwargs.setdefault('environment', os.environ['ENVIRONMENT'])
+
     client = raven.Client(sentry_dsn, **kwargs)
     setattr(application, 'sentry_client', client)
 

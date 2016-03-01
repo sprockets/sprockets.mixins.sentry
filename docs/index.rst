@@ -39,6 +39,8 @@ Version History
   - Move raven client initialization into ``sprockets.mixins.sentry.install``
   - Add support for setting raven.Client options when calling ``install`` on
     the application.
+  - The sentry "environment" is set to the ``$ENVIRONMENT`` environment
+    variable if it is set.
 
 * `1.0.0`_
 
