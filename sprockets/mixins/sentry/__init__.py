@@ -8,20 +8,25 @@ version_info = (1, 0, 0)
 __version__ = '.'.join(str(v) for v in version_info)
 
 
+import logging
 import math
 import os
 import re
 import time
 try:
     from urllib import parse
-except ImportError:
+except ImportError:  # pragma no cover
     import urlparse as parse
 
 import raven
 from tornado import web
 
+
+LOGGER = logging.getLogger(__name__)
 SENTRY_CLIENT = 'sentry_client'
 URI_RE = re.compile(r'^[\w\+\-]+://.*:(\w+)@.*')
+
+_sentry_warning_issued = False
 
 
 class SentryMixin(object):
@@ -59,16 +64,16 @@ class SentryMixin(object):
     """
 
     def __init__(self, *args, **kwargs):
+        self.sentry_client = None
         self.sentry_extra = {}
         self.sentry_tags = {}
         super(SentryMixin, self).__init__(*args, **kwargs)
 
     def initialize(self):
-        sentry_dsn = os.environ.get('SENTRY_DSN')
-        if self.sentry_client is None and sentry_dsn:
-            modules = ['raven', 'sys', 'tornado', __name__]
-            client = raven.Client(sentry_dsn, include_paths=modules)
-            setattr(self.application, SENTRY_CLIENT, client)
+        self.sentry_client = get_client(self.application)
+        if self.sentry_client is None:
+            install(self.application)
+            self.sentry_client = get_client(self.application)
         super(SentryMixin, self).initialize()
 
     def _strip_uri_passwords(self, values):
@@ -109,6 +114,54 @@ class SentryMixin(object):
 
         super(SentryMixin, self)._handle_request_exception(e)
 
-    @property
-    def sentry_client(self):
-        return getattr(self.application, SENTRY_CLIENT, None)
+
+def install(application, **kwargs):
+    """
+    Call this to install a sentry client into a Tornado application.
+
+    :param tornado.web.Application application: the application to
+        install the client into.
+    :param kwargs: keyword parameters to pass to the
+        :class:`raven.base.Client` initializer.
+
+    :returns: :data:`True` if the client was installed by this call
+        and :data:`False` otherwise.
+
+    """
+    if get_client(application) is not None:
+        LOGGER.warning('sentry client is already installed')
+        return False
+
+    sentry_dsn = kwargs.pop('dsn', os.environ.get('SENTRY_DSN'))
+    if sentry_dsn is None:
+        global _sentry_warning_issued
+        if not _sentry_warning_issued:
+            LOGGER.info('sentry DSN not found, not installing client')
+            _sentry_warning_issued = True
+        setattr(application, 'sentry_client', None)
+        return False
+
+    include_paths = set(kwargs.pop('include_paths', []))
+    include_paths.update(['raven', 'sprockets', 'sys', 'tornado', __name__])
+    kwargs['include_paths'] = list(include_paths)
+
+    client = raven.Client(sentry_dsn, **kwargs)
+    setattr(application, 'sentry_client', client)
+
+    return True
+
+
+def get_client(application):
+    """
+    Retrieve the sentry client for `application`.
+
+    :param tornado.web.Application application: application to retrieve
+        the sentry client for.
+    :returns: a :class:`raven.base.Client` instance or :data:`None`
+    :rtype: raven.base.Client
+
+    """
+    try:
+        return application.sentry_client
+    except AttributeError:
+        return None

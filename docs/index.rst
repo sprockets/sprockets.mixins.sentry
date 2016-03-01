@@ -34,6 +34,10 @@ http://localhost:8000/whatever provided that *whatever* is not an integer.
 
 Version History
 ---------------
+* `Next Release`_
+
+  - Move raven client initialization into ``sprockets.mixins.sentry.install``
+
 * `1.0.0`_
 
   - Work around `getsentry/raven-python#735`_
@@ -53,7 +57,7 @@ Version History
 
 * `0.2.0`_ (22-Jun-2015)
 
-  - Stop reporting :class:`tornado.web.HTTPError`s
+  - Stop reporting :class:`tornado.web.HTTPError`
 
 * `0.1.0`_ (13-May-2015)
 
