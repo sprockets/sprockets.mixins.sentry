@@ -34,6 +34,11 @@ http://localhost:8000/whatever provided that *whatever* is not an integer.
 
 Version History
 ---------------
+* `1.1.1`_
+
+  - Fix password scrubbing in URLs.
+  - Remove support for python 2.6, 3.2, and 3.3
+
 * `1.1.0`_
 
   - Move raven client initialization into ``sprockets.mixins.sentry.install``
@@ -88,7 +93,8 @@ License
 .. _0.4.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.3.0...0.4.0
 .. _1.0.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.4.0...1.0.0
 .. _1.1.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.0.0...1.1.0
-.. _Next Release: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.0...HEAD
+.. _1.1.1: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.0...1.1.1
+.. _Next Release: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.1...HEAD
 
 .. |Version| image:: https://badge.fury.io/py/sprockets.mixins.sentry.svg?
    :target: http://badge.fury.io/py/sprockets.mixins.sentry

@@ -4,7 +4,7 @@ mixins.sentry
 A RequestHandler mixin for sending exceptions to Sentry
 
 """
-version_info = (1, 1, 0)
+version_info = (1, 1, 1)
 __version__ = '.'.join(str(v) for v in version_info)
 
 
@@ -24,7 +24,15 @@ from tornado import web
 
 LOGGER = logging.getLogger(__name__)
 SENTRY_CLIENT = 'sentry_client'
-URI_RE = re.compile(r'^[\w\+\-]+://.*:(\w+)@.*')
+
+# This matches the userinfo production from RFC3986 with some extra
+# leniancy to account for poorly formed URLs.  For example, it lets
+# you include braces and other things in the password section.
+URI_RE = re.compile(r"^[\w\+\-]+://"
+                    r"[-a-z0-9._~!$&'()*+,;=%]+:"
+                    r"([^@]+)"
+                    r"@",
+                    re.IGNORECASE)
 
 _sentry_warning_issued = False
 
