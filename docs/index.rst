@@ -92,7 +92,8 @@ License
 .. _0.4.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.3.0...0.4.0
 .. _1.0.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.4.0...1.0.0
 .. _1.1.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.0.0...1.1.0
-.. _Next Release: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.0...HEAD
+.. _1.1.1: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.0...1.1.1
+.. _Next Release: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.1...HEAD
 
 .. |Version| image:: https://badge.fury.io/py/sprockets.mixins.sentry.svg?
    :target: http://badge.fury.io/py/sprockets.mixins.sentry
