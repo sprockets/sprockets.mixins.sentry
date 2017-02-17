@@ -24,7 +24,15 @@ from tornado import web
 
 LOGGER = logging.getLogger(__name__)
 SENTRY_CLIENT = 'sentry_client'
-URI_RE = re.compile(r'^[\w\+\-]+://.*:(\w+)@.*')
+
+# This matches the userinfo production from RFC3986 with a little
+# leniancy -- for example, it does not strictly enforce that `%` is
+# followed by two hex digits.
+URI_RE = re.compile(r"^[\w\+\-]+://"
+                    r"[-a-z0-9!$&'()*+,;=%]+:"
+                    r"([-a-z0-9!$&'()*+,;=%]+)"
+                    r"@",
+                    re.IGNORECASE)
 
 _sentry_warning_issued = False
 

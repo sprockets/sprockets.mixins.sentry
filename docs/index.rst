@@ -34,6 +34,10 @@ http://localhost:8000/whatever provided that *whatever* is not an integer.
 
 Version History
 ---------------
+* `Next Release`_
+
+  - Fix password scrubbing in URLs.
+
 * `1.1.0`_
 
   - Move raven client initialization into ``sprockets.mixins.sentry.install``
