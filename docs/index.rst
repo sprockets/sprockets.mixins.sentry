@@ -34,9 +34,10 @@ http://localhost:8000/whatever provided that *whatever* is not an integer.
 
 Version History
 ---------------
-* `Next Release`_
+* `1.1.1`_
 
   - Fix password scrubbing in URLs.
+  - Remove support for python 2.6, 3.2, and 3.3
 
 * `1.1.0`_
 
