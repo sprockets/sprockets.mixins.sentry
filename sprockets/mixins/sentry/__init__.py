@@ -29,7 +29,7 @@ SENTRY_CLIENT = 'sentry_client'
 # leniancy to account for poorly formed URLs.  For example, it lets
 # you include braces and other things in the password section.
 URI_RE = re.compile(r"^[\w\+\-]+://"
-                    r"[-a-z0-9!$&'()*+,;=%.]+:"
+                    r"[-a-z0-9._~!$&'()*+,;=%]+:"
                     r"([^@]+)"
                     r"@",
                     re.IGNORECASE)
