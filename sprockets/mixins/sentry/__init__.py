@@ -25,12 +25,12 @@ from tornado import web
 LOGGER = logging.getLogger(__name__)
 SENTRY_CLIENT = 'sentry_client'
 
-# This matches the userinfo production from RFC3986 with a little
-# leniancy -- for example, it does not strictly enforce that `%` is
-# followed by two hex digits.
+# This matches the userinfo production from RFC3986 with some extra
+# leniancy to account for poorly formed URLs.  For example, it lets
+# you include braces and other things in the password section.
 URI_RE = re.compile(r"^[\w\+\-]+://"
-                    r"[-a-z0-9!$&'()*+,;=%]+:"
-                    r"([-a-z0-9!$&'()*+,;=%]+)"
+                    r"[-a-z0-9!$&'()*+,;=%.]+:"
+                    r"([^@]+)"
                     r"@",
                     re.IGNORECASE)
 

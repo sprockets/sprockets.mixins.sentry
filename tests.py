@@ -30,11 +30,13 @@ from sprockets.mixins import sentry
 VALUES = {'PGSQL_DSN': 'postgres://foo:bar@localhost:5432/dbname',
           'RABBITMQ_DSN': 'amqp://sentry:rabbitmq@localhost:5672/%2f',
           'VIRTUAL_ENV': '/Users/gavinr/Environments/sprockets',
-          'PGSQL_FOO': "postgres://foo:abc%1E!$&'(*+,;=)'DEF%40@a/foo?q=12"}
+          'PGSQL_SAFE': "postgres://foo:ab.c%1E!$&'(*+,;=)'DEF%40@a/foo?q=12",
+          'PGSQL_BAD': 'postgres://foo:{22.0/7.0~=3.14}@a/b'}
 EXPECTATIONS = {'PGSQL_DSN': 'postgres://foo:****@localhost:5432/dbname',
                 'RABBITMQ_DSN': 'amqp://sentry:****@localhost:5672/%2f',
                 'VIRTUAL_ENV': '/Users/gavinr/Environments/sprockets',
-                'PGSQL_FOO': 'postgres://foo:****@a/foo?q=12'}
+                'PGSQL_SAFE': 'postgres://foo:****@a/foo?q=12',
+                'PGSQL_BAD': 'postgres://foo:****@a/b'}
 
 os.environ['SENTRY_DSN'] = (
     'https://00000000000000000000000000000000:'
