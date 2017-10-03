@@ -4,7 +4,7 @@ mixins.sentry
 A RequestHandler mixin for sending exceptions to Sentry
 
 """
-version_info = (1, 1, 1)
+version_info = (1, 1, 2)
 __version__ = '.'.join(str(v) for v in version_info)
 
 
@@ -19,6 +19,8 @@ except ImportError:  # pragma no cover
     import urlparse as parse
 
 import raven
+from raven._compat import string_types, text_type
+from raven.processors import SanitizePasswordsProcessor
 from tornado import web
 
 
@@ -35,6 +37,50 @@ URI_RE = re.compile(r"^[\w\+\-]+://"
                     re.IGNORECASE)
 
 _sentry_warning_issued = False
+
+
+class SanitizeEmailsProcessor(SanitizePasswordsProcessor):
+    """
+    Remove all email addresses from the payload sent to sentry.
+
+    """
+
+    FIELDS = frozenset(['email', 'email_address'])
+    VALUES_RE = re.compile(r"""
+    ((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"
+      (?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|
+       \\[\x01-\x09\x0b\x0c\x0e-\x7f])*\")
+      @
+      (?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]
+      (?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|
+       [01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|
+       [a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|
+       \\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))
+    """, re.VERBOSE ^ re.IGNORECASE)  # RFC5322
+
+    def sanitize(self, key, value):
+        if value is None:
+            return
+
+        if isinstance(value, string_types):
+            return self.VALUES_RE.sub(self.MASK, value)
+
+        if not key:  # key can be a NoneType
+            return value
+
+        # Just in case we have bytes here, we want to make them into text
+        # properly without failing so we can perform our check.
+        if isinstance(key, bytes):
+            key = key.decode('utf-8', 'replace')
+        else:
+            key = text_type(key)
+
+        key = key.lower()
+        for field in self.FIELDS:
+            if field in key:
+                # store mask as a fixed length for security
+                return self.MASK
+        return value
 
 
 class SentryMixin(object):

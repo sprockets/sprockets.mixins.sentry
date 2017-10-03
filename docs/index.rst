@@ -34,6 +34,10 @@ http://localhost:8000/whatever provided that *whatever* is not an integer.
 
 Version History
 ---------------
+* `1.1.2`_
+
+  - Add email sanitization processor
+
 * `1.1.1`_
 
   - Fix password scrubbing in URLs.
@@ -94,7 +98,8 @@ License
 .. _1.0.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/0.4.0...1.0.0
 .. _1.1.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.0.0...1.1.0
 .. _1.1.1: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.0...1.1.1
-.. _Next Release: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.1...HEAD
+.. _1.1.2: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.1...1.1.2
+.. _Next Release: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.2...HEAD
 
 .. |Version| image:: https://badge.fury.io/py/sprockets.mixins.sentry.svg?
    :target: http://badge.fury.io/py/sprockets.mixins.sentry

@@ -202,3 +202,60 @@ class InstallationTests(unittest.TestCase):
         finally:
             if saved:
                 os.environ['ENVIRONMENT'] = saved
+
+
+class SanitizeEmailProcessorTests(unittest.TestCase):
+
+    data = {
+        'exception': {
+            'values': [{
+                'stacktrace': {
+                    'frames': [{
+                        'vars': {
+                            'error': 'HTTPError("example@example.com"),',
+                            'kwargs': {'email': 'example@example.com'}
+                        },
+                    }]
+                }
+            }],
+        },
+        'request': {
+            'data': 'ip_address=1&email=example%40example.com',
+            'cookies': {},
+            'headers': {'X-Email-Header': 'example+1234@example.net'},
+            'query_string': 'email=example@example.com&name=example',
+        },
+        'extra': {
+            'misc': 'Notes for example@example.com',
+            'env': {'email': 'example+1234{}@example.com'}
+        }
+    }
+
+    expectation = {
+        'exception': {
+            'values': [{
+                'stacktrace': {
+                    'frames': [{
+                        'vars': {
+                            'error': 'HTTPError("********"),',
+                            'kwargs': {'email': '********'}
+                        },
+                    }]
+                }
+            }],
+        },
+        'request': {
+            'data': 'ip_address=1&email=example%40example.com',
+            'cookies': {},
+            'headers': {'X-Email-Header': '********'},
+            'query_string': 'email=********&name=example',
+        },
+        'extra': {
+            'env': {'email': '********'},
+            'misc': 'Notes for ********'
+        }
+    }
+
+    def test_email_is_removed_from_extra_data(self):
+        result = sentry.SanitizeEmailsProcessor(mock.Mock()).process(self.data)
+        self.assertDictEqual(result, self.expectation)
