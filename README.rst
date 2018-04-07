@@ -2,7 +2,7 @@ sprockets.mixins.sentry
 =======================
 A RequestHandler mixin for sending exceptions to Sentry
 
-|Version| |Downloads| |Status| |Coverage| |License|
+|Version| |Status| |License|
 
 Installation
 ------------
@@ -46,19 +46,13 @@ This examples demonstrates how to use ``sprockets.mixins.sentry``.
 
 Version History
 ---------------
-Available at https://sprocketsmixinssentry.readthedocs.org/en/latest/
+Available at https://sprocketsmixinssentry.readthedocs.io/en/latest/#version-history
 
 .. |Version| image:: https://img.shields.io/pypi/v/sprockets.mixins.sentry.svg?
    :target: http://badge.fury.io/py/sprockets.mixins.sentry
 
 .. |Status| image:: https://img.shields.io/travis/sprockets/sprockets.mixins.sentry.svg?
    :target: https://travis-ci.org/sprockets/sprockets.mixins.sentry
-
-.. |Coverage| image:: https://img.shields.io/codecov/c/github/sprockets/sprockets.mixins.sentry.svg?
-   :target: https://codecov.io/github/sprockets/sprockets.mixins.sentry?branch=master
-
-.. |Downloads| image:: https://img.shields.io/pypi/dm/sprockets.mixins.sentry.svg?
-   :target: https://pypi.python.org/pypi/sprockets.mixins.sentry
 
 .. |License| image:: https://img.shields.io/pypi/l/sprockets.mixins.sentry.svg?
    :target: https://sprocketsmixinssentry.readthedocs.org
