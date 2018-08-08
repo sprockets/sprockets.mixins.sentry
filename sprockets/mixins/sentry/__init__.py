@@ -12,6 +12,7 @@ import logging
 import math
 import os
 import re
+import sys
 import time
 try:
     from urllib import parse
@@ -19,9 +20,15 @@ except ImportError:  # pragma no cover
     import urlparse as parse
 
 import raven
-from raven._compat import string_types, text_type
 from raven.processors import SanitizePasswordsProcessor
 from tornado import web
+
+if sys.version_info[0] == 3:
+    string_types = str
+    text_type = str
+else:
+    string_types = basestring
+    text_type = unicode
 
 
 LOGGER = logging.getLogger(__name__)
