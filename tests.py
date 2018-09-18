@@ -92,7 +92,7 @@ class ApplicationTests(testing.AsyncHTTPTestCase):
         message = self.get_sentry_message()
         self.assertEqual(message['request']['url'], self.get_url('/fail'))
         self.assertEqual(message['request']['method'], 'GET')
-        self.assertEqual(message['request']['data'], b'')
+        self.assertEqual(message['request']['data'], '')
 
     def test_that_extra_data_is_included(self):
         self.fetch('/fail')

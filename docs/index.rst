@@ -34,6 +34,11 @@ http://localhost:8000/whatever provided that *whatever* is not an integer.
 
 Version History
 ---------------
+* `Next Release`_
+
+  - Extend raven pin so that we can use python 3.7
+  - Advertise python 3.7 support
+
 * `1.1.2`_
 
   - Add email sanitization processor
