@@ -4,24 +4,23 @@ mixins.sentry
 A RequestHandler mixin for sending exceptions to Sentry
 
 """
-version_info = (1, 1, 2)
-__version__ = '.'.join(str(v) for v in version_info)
-
-
 import logging
 import math
 import os
 import re
 import sys
 import time
-try:
-    from urllib import parse
-except ImportError:  # pragma no cover
-    import urlparse as parse
 
 import raven
 from raven.processors import SanitizePasswordsProcessor
 from tornado import web
+
+LOGGER = logging.getLogger(__name__)
+SENTRY_CLIENT = 'sentry_client'
+
+version_info = (1, 2, 0)
+__version__ = '.'.join(str(v) for v in version_info)
+
 
 if sys.version_info[0] == 3:
     string_types = str
@@ -29,10 +28,6 @@ if sys.version_info[0] == 3:
 else:
     string_types = basestring
     text_type = unicode
-
-
-LOGGER = logging.getLogger(__name__)
-SENTRY_CLIENT = 'sentry_client'
 
 # This matches the userinfo production from RFC3986 with some extra
 # leniancy to account for poorly formed URLs.  For example, it lets
