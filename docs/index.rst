@@ -34,6 +34,11 @@ http://localhost:8000/whatever provided that *whatever* is not an integer.
 
 Version History
 ---------------
+* `1.1.3`_
+
+  - Extend raven pin so that we can use python 3.7
+  - Advertise python 3.7 support
+
 * `1.1.2`_
 
   - Add email sanitization processor
@@ -99,7 +104,8 @@ License
 .. _1.1.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.0.0...1.1.0
 .. _1.1.1: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.0...1.1.1
 .. _1.1.2: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.1...1.1.2
-.. _Next Release: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.2...HEAD
+.. _1.1.3: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.2...1.1.3
+.. _Next Release: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.3...HEAD
 
 .. |Version| image:: https://badge.fury.io/py/sprockets.mixins.sentry.svg?
    :target: http://badge.fury.io/py/sprockets.mixins.sentry
