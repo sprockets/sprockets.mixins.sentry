@@ -29,7 +29,7 @@ if sys.version_info < (3, 0):
 
 setuptools.setup(
     name='sprockets.mixins.sentry',
-    version='1.1.2',
+    version='1.1.3',
     description='A RequestHandler mixin for sending exceptions to Sentry',
     long_description=codecs.open('README.rst', encoding='utf-8').read(),
     url='https://github.com/sprockets/sprockets.mixins.sentry.git',
