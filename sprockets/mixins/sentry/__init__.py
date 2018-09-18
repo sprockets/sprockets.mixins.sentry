@@ -18,7 +18,7 @@ from tornado import web
 LOGGER = logging.getLogger(__name__)
 SENTRY_CLIENT = 'sentry_client'
 
-version_info = (1, 1, 2)
+version_info = (1, 2, 0)
 __version__ = '.'.join(str(v) for v in version_info)
 
 
