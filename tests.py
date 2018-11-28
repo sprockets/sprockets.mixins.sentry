@@ -149,7 +149,8 @@ class ApplicationTests(testing.AsyncHTTPTestCase):
 class InstallationTests(unittest.TestCase):
 
     # cannot use mock since it answers True to getattr calls
-    class Application: pass
+    class Application:
+        pass
 
     def test_that_client_is_installed(self):
         application = self.Application()
