@@ -23,9 +23,6 @@ def read_requirements_file(req_name):
 install_requires = read_requirements_file('requires/installation.txt')
 tests_require = read_requirements_file('requires/testing.txt')
 
-if sys.version_info < (3, 0):
-    tests_require.append('mock')
-
 setuptools.setup(
     name='sprockets.mixins.sentry',
     version='1.2.0',
@@ -41,14 +38,11 @@ setuptools.setup(
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],

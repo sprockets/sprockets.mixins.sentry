@@ -3,12 +3,9 @@
 sudo: false
 language: python
 python:
-  - 2.7
   - 3.5
   - 3.6
   - 3.7-dev
-  - pypy
-  - pypy3
 install:
   - pip install -r requires/development.txt
 script: nosetests
@@ -18,7 +15,7 @@ deploy:
   distributions: sdist bdist_wheel
   provider: pypi
   on:
-    python: 3.6
+    python: 3.7
     tags: true
     all_branches: true
   user: sprockets
