@@ -2,18 +2,11 @@
 Tests for the sprockets.mixins.sentry package
 
 """
+from unittest import mock
 import os
 import sys
+import unittest
 import uuid
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
-
-try:
-    from unittest import mock
-except ImportError:
-    import mock
 
 from tornado import testing, web
 import raven
@@ -48,7 +41,7 @@ class TestRequestHandler(sentry.SentryMixin, web.RequestHandler):
     send_to_sentry = mock.Mock()
 
     def initialize(self):
-        super(TestRequestHandler, self).initialize()
+        super().initialize()
         self.sentry_client.send = self.send_to_sentry
         self.send_to_sentry.reset_mock()
 
@@ -156,7 +149,7 @@ class ApplicationTests(testing.AsyncHTTPTestCase):
 class InstallationTests(unittest.TestCase):
 
     # cannot use mock since it answers True to getattr calls
-    class Application(object): pass
+    class Application: pass
 
     def test_that_client_is_installed(self):
         application = self.Application()
