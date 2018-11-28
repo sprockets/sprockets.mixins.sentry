@@ -20,9 +20,8 @@ def read_requirements_file(req_name):
     return requirements
 
 
-install_requires = read_requirements_file('requirements.txt')
-setup_requires = read_requirements_file('setup-requirements.txt')
-tests_require = read_requirements_file('test-requirements.txt')
+install_requires = read_requirements_file('requires/installation.txt')
+tests_require = read_requirements_file('requires/testing.txt')
 
 if sys.version_info < (3, 0):
     tests_require.append('mock')
@@ -61,7 +60,6 @@ setuptools.setup(
     namespace_packages=['sprockets',
                         'sprockets.mixins'],
     install_requires=install_requires,
-    setup_requires=setup_requires,
     tests_require=tests_require,
     test_suite='nose.collector',
     zip_safe=False)
