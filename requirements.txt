@@ -1,2 +1,2 @@
 raven>=6,<7
-tornado>3,<5
+tornado>=4,<6
