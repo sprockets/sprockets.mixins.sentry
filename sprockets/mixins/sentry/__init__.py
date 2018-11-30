@@ -8,7 +8,6 @@ import logging
 import math
 import os
 import re
-import sys
 import time
 
 import raven
@@ -21,13 +20,6 @@ SENTRY_CLIENT = 'sentry_client'
 version_info = (1, 2, 0)
 __version__ = '.'.join(str(v) for v in version_info)
 
-
-if sys.version_info[0] == 3:
-    string_types = str
-    text_type = str
-else:
-    string_types = basestring
-    text_type = unicode
 
 # This matches the userinfo production from RFC3986 with some extra
 # leniancy to account for poorly formed URLs.  For example, it lets
@@ -64,7 +56,7 @@ class SanitizeEmailsProcessor(SanitizePasswordsProcessor):
         if value is None:
             return
 
-        if isinstance(value, string_types):
+        if isinstance(value, str):
             return self.VALUES_RE.sub(self.MASK, value)
 
         if not key:  # key can be a NoneType
@@ -75,7 +67,7 @@ class SanitizeEmailsProcessor(SanitizePasswordsProcessor):
         if isinstance(key, bytes):
             key = key.decode('utf-8', 'replace')
         else:
-            key = text_type(key)
+            key = str(key)
 
         key = key.lower()
         for field in self.FIELDS:
@@ -85,7 +77,7 @@ class SanitizeEmailsProcessor(SanitizePasswordsProcessor):
         return value
 
 
-class SentryMixin(object):
+class SentryMixin:
     """
     Report unexpected exceptions to Sentry.
 
@@ -123,14 +115,14 @@ class SentryMixin(object):
         self.sentry_client = None
         self.sentry_extra = {}
         self.sentry_tags = {}
-        super(SentryMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def initialize(self):
         self.sentry_client = get_client(self.application)
         if self.sentry_client is None:
             install(self.application)
             self.sentry_client = get_client(self.application)
-        super(SentryMixin, self).initialize()
+        super().initialize()
 
     def _strip_uri_passwords(self, values):
         for key in values.keys():
@@ -143,7 +135,7 @@ class SentryMixin(object):
         if (isinstance(e, web.HTTPError)
                 or isinstance(e, web.Finish)
                 or self.sentry_client is None):
-            return super(SentryMixin, self)._handle_request_exception(e)
+            return super()._handle_request_exception(e)
 
         duration = math.ceil((time.time() - self.request._start_time) * 1000)
         kwargs = {'extra': self.sentry_extra, 'time_spent': duration}
@@ -168,7 +160,7 @@ class SentryMixin(object):
             kwargs.update({'tags': self.sentry_tags})
         self.sentry_client.captureException(**kwargs)
 
-        super(SentryMixin, self)._handle_request_exception(e)
+        super()._handle_request_exception(e)
 
 
 def install(application, **kwargs):
