@@ -1,3 +1,5 @@
+DEPRECATED - DO NOT USE
+
 sprockets.mixins.sentry
 =======================
 A RequestHandler mixin for sending exceptions to Sentry
@@ -30,10 +32,11 @@ This examples demonstrates how to use ``sprockets.mixins.sentry``.
 
 .. code-block:: python
 
-   from sprockets.mixins import sentry
-   from tornado import web
+   import raven
+   import raven.contrib.tornado
+   from tornado import ioloop, web
 
-   class RequestHandler(sentry.SentryMixin, web.RequestHandler):
+   class RequestHandler(raven.contrib.tornado.SentryMixin, web.RequestHandler):
        """Requires a ``SENTRY_DSN`` environment variable is set with the
        DSN value provided by sentry.
 
@@ -41,7 +44,17 @@ This examples demonstrates how to use ``sprockets.mixins.sentry``.
 
        """
        def get(self, *args, **kwargs):
-           raise ValueError("This should send an error to sentry")
+           raise ValueError('This should send an error to sentry')
+
+    app = web.Application(
+        [('/', RequestHandler)]
+    )
+    app.sentry_client = raven.Client(
+        environment='yourenvironment',
+        include_paths=['raven', 'tornado']
+    )
+    app.listen(8000)
+    ioloop.IOLoop.current().start()
 
 
 Version History
