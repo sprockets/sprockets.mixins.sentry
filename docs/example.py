@@ -10,7 +10,7 @@ class Handler(sentry.SentryMixin, web.RequestHandler):
 
     def initialize(self, **kwargs):
         tags = kwargs.pop('tags', dict())
-        super(Handler, self).initialize(**kwargs)
+        super().initialize(**kwargs)
         self.sentry_tags.update(tags)
 
     def get(self, status_code):
@@ -18,7 +18,7 @@ class Handler(sentry.SentryMixin, web.RequestHandler):
 
 
 def make_application(app_tags):
-    application = web.Application([web.url(r'/(\S+)', Handler)])
+    application = web.Application([(r'/(\S+)', Handler)])
     sentry.install(application, include_paths=[__name__], tags=app_tags)
     return application
 

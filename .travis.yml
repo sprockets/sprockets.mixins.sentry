@@ -12,6 +12,8 @@ install:
 script: 
   - nosetests
   - python setup.py build_sphinx
+  - python setup.py check
+  - flake8
 after_success:
   - codecov
 deploy:
