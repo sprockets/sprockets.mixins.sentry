@@ -7,7 +7,7 @@ Release History
 
   - Add support for Tornado 5
   - Drop Tornado<5 support
-  - Drop Python<3.7 support
+  - Drop Python<3.5 support
 
 * `1.2.0`_
 
