@@ -9,6 +9,7 @@ import unittest
 import uuid
 
 from tornado import testing, web
+import pkg_resources
 import raven
 import tornado
 
@@ -110,8 +111,10 @@ class ApplicationTests(testing.AsyncHTTPTestCase):
         self.fetch('/fail')
         message = self.get_sentry_message()
         self.assertEqual(message['modules']['raven'], raven.VERSION)
-        self.assertEqual(message['modules']['sprockets.mixins.sentry'],
-                         sentry.__version__)
+        self.assertEqual(
+            message['modules']['sprockets.mixins.sentry'],
+            pkg_resources.get_distribution('sprockets.mixins.sentry').version
+        )
         self.assertEqual(message['modules']['sys'], sys.version)
         self.assertEqual(message['modules']['tornado'], tornado.version)
 

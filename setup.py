@@ -10,7 +10,6 @@ REPO = pathlib.Path(__file__).parent
 
 setuptools.setup(
     name='sprockets.mixins.sentry',
-    version='1.2.0',
     description='A RequestHandler mixin for sending exceptions to Sentry',
     long_description=REPO.joinpath('README.rst').read_text(),
     url='https://github.com/sprockets/sprockets.mixins.sentry.git',
@@ -41,5 +40,7 @@ setuptools.setup(
                         'sprockets.mixins'],
     install_requires=REPO.joinpath('requires/installation.txt').read_text(),
     tests_require=REPO.joinpath('requires/testing.txt').read_text(),
+    setup_requires=['setuptools_scm'],
+    use_scm_version=True,
     test_suite='nose.collector',
     zip_safe=False)

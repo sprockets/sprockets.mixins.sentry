@@ -17,10 +17,6 @@ from tornado import web
 LOGGER = logging.getLogger(__name__)
 SENTRY_CLIENT = 'sentry_client'
 
-version_info = (1, 2, 0)
-__version__ = '.'.join(str(v) for v in version_info)
-
-
 # This matches the userinfo production from RFC3986 with some extra
 # leniancy to account for poorly formed URLs.  For example, it lets
 # you include braces and other things in the password section.

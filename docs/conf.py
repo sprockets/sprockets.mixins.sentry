@@ -1,4 +1,4 @@
-from sprockets.mixins.sentry import __version__
+import pkg_resources
 
 extensions = [
     'sphinx.ext.autodoc',
@@ -8,8 +8,8 @@ extensions = [
 master_doc = 'index'
 project = 'sprockets.mixins.sentry'
 copyright = '2016, AWeber Communications'
-version = '.'.join(__version__.split('.')[0:1])
-release = __version__
+release = pkg_resources.get_distribution('sprockets.mixins.sentry').version
+version = '.'.join(release.split('.')[0:1])
 pygments_style = 'sphinx'
 html_theme = 'sphinx_rtd_theme'
 intersphinx_mapping = {
