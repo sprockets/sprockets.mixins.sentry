@@ -44,10 +44,6 @@ This examples demonstrates how to use ``sprockets.mixins.sentry``.
            raise ValueError("This should send an error to sentry")
 
 
-Version History
----------------
-Available at https://sprocketsmixinssentry.readthedocs.io/en/latest/#version-history
-
 .. |Version| image:: https://img.shields.io/pypi/v/sprockets.mixins.sentry.svg?
    :target: http://badge.fury.io/py/sprockets.mixins.sentry
 
