@@ -57,7 +57,6 @@ class TestRequestHandler(sentry.SentryMixin, web.RequestHandler):
             self.sentry_tags['some_tag'] = 'some_value'
             raise RuntimeError
         self.set_status(int(action))
-        self.finish()
 
 
 class TestDSNPasswordMask(unittest.TestCase):
@@ -72,7 +71,7 @@ class ApplicationTests(testing.AsyncHTTPTestCase):
 
     def get_app(self):
         self.sentry_client = TestRequestHandler.send_to_sentry
-        app = web.Application([web.url(r'/(\S+)', TestRequestHandler)])
+        app = web.Application([(r'/(\S+)', TestRequestHandler)])
         return app
 
     def get_sentry_message(self):
