@@ -1,32 +1,18 @@
 #!/usr/bin/env python
 
-import codecs
+import pathlib
 
 import setuptools
 
 
-def read_requirements_file(req_name):
-    requirements = []
-    try:
-        with codecs.open(req_name, encoding='utf-8') as req_file:
-            for req_line in req_file:
-                if '#' in req_line:
-                    req_line = req_line[0:req_line.find('#')].strip()
-                if req_line:
-                    requirements.append(req_line.strip())
-    except IOError:
-        pass
-    return requirements
+REPO = pathlib.Path(__file__).parent
 
-
-install_requires = read_requirements_file('requires/installation.txt')
-tests_require = read_requirements_file('requires/testing.txt')
 
 setuptools.setup(
     name='sprockets.mixins.sentry',
     version='1.2.0',
     description='A RequestHandler mixin for sending exceptions to Sentry',
-    long_description=codecs.open('README.rst', encoding='utf-8').read(),
+    long_description=REPO.joinpath('README.rst').read_text(),
     url='https://github.com/sprockets/sprockets.mixins.sentry.git',
     author='AWeber Communications',
     author_email='api@aweber.com',
@@ -53,7 +39,7 @@ setuptools.setup(
     include_package_data=True,
     namespace_packages=['sprockets',
                         'sprockets.mixins'],
-    install_requires=install_requires,
-    tests_require=tests_require,
+    install_requires=REPO.joinpath('requires/installation.txt').read_text(),
+    tests_require=REPO.joinpath('requires/testing.txt').read_text(),
     test_suite='nose.collector',
     zip_safe=False)
