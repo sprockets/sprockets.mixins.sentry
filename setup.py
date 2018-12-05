@@ -45,6 +45,7 @@ setuptools.setup(
         'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
+    python_requires='>=3.5',
     packages=['sprockets',
               'sprockets.mixins',
               'sprockets.mixins.sentry'],
