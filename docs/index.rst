@@ -8,4 +8,5 @@ License
    :hidden:
 
    api
+   configuration
    history
