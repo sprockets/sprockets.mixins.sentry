@@ -3,9 +3,10 @@
 Release History
 ===============
 
-* `Next Release`_
+* `2.0.1`_ (15-Mar-2019)
 
-  - - Add configuration documentation
+  - Add configuration documentation
+  - Include Tornado 6 in pin
 
 * `2.0.0`_ (8-Dec-2018)
 
@@ -72,4 +73,5 @@ Release History
 .. _1.1.2: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.1...1.1.2
 .. _1.2.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.1.2...1.2.0
 .. _2.0.0: https://github.com/sprockets/sprockets.mixins.sentry/compare/1.2.0...2.0.0
-.. _Next Release: https://github.com/sprockets/sprockets.mixins.sentry/compare/2.0.0...HEAD
+.. _2.0.1: https://github.com/sprockets/sprockets.mixins.sentry/compare/2.0.0...2.0.1
+.. _Next Release: https://github.com/sprockets/sprockets.mixins.sentry/compare/2.0.1...HEAD
