@@ -12,6 +12,7 @@ setuptools.setup(
     name='sprockets.mixins.sentry',
     description='A RequestHandler mixin for sending exceptions to Sentry',
     long_description=REPO.joinpath('README.rst').read_text(),
+    long_description_content_type='text/x-rst',
     url='https://github.com/sprockets/sprockets.mixins.sentry.git',
     author='AWeber Communications',
     author_email='api@aweber.com',
