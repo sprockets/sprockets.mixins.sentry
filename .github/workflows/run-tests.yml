@@ -21,7 +21,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools twine wheel
+          python -m pip install --upgrade build pip setuptools twine
           pip install -r requires/development.txt
       - name: Lint
         run: |
@@ -29,8 +29,7 @@ jobs:
       - name: Verify distribution build
         run: |
           rm -fr dist
-          python setup.py bdist_wheel
-          python setup.py sdist
+          python -mbuild --sdist --wheel --outdir dist/ .
           twine check --strict dist/*
       - name: Run tests
         run: |
