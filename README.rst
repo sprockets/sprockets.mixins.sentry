@@ -47,8 +47,8 @@ This examples demonstrates how to use ``sprockets.mixins.sentry``.
 .. |Version| image:: https://img.shields.io/pypi/v/sprockets.mixins.sentry.svg?
    :target: http://badge.fury.io/py/sprockets.mixins.sentry
 
-.. |Status| image:: https://img.shields.io/travis/sprockets/sprockets.mixins.sentry.svg?
-   :target: https://travis-ci.org/sprockets/sprockets.mixins.sentry
+.. |Status| image:: https://github.com/sprockets/sprockets.mixins.sentry/actions/workflows/run-tests.yml/badge.svg
+   :target: https://github.com/sprockets/sprockets.mixins.sentry/actions/workflows/run-tests.yml
 
 .. |License| image:: https://img.shields.io/pypi/l/sprockets.mixins.sentry.svg?
    :target: https://sprocketsmixinssentry.readthedocs.org

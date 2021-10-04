@@ -1,0 +1,51 @@
+name: Testing
+on:
+  push:
+    branches: ["*"]
+    tags-ignore: ["*"]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test:
+    name: Tests and style checks
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade build pip setuptools twine
+          pip install -r requires/development.txt
+      - name: Lint
+        run: |
+          flake8 sprockets/mixins/sentry tests.py setup.py docs/conf.py
+      - name: Verify distribution build
+        run: |
+          rm -fr dist
+          python -mbuild --sdist --wheel --outdir dist/ .
+          twine check --strict dist/*
+      - name: Run tests
+        run: |
+          coverage run -m unittest
+          coverage report
+          coverage xml -o ./coverage.xml
+      - name: Send coverage to codecov.io
+        uses: codecov/codecov-action@v1.3.2
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          file: ./coverage.xml
+          flags: unittests
+          fail_ci_if_error: true
+      - name: Save coverage report
+        if: ${{ matrix.python-version == '3.9' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage.xml
+          path: ./coverage.xml

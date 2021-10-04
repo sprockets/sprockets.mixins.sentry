@@ -3,6 +3,10 @@
 Release History
 ===============
 
+* `Next Release`_
+
+  - Replace travis-ci.org build with GitHub actions
+
 * `2.0.1`_ (15-Mar-2019)
 
   - Add configuration documentation
